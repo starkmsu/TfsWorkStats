@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.bugsTab = new System.Windows.Forms.TabPage();
 			this.resultsGroupBox = new System.Windows.Forms.GroupBox();
@@ -54,6 +55,7 @@
 			this.settingsTab = new System.Windows.Forms.TabPage();
 			this.tfsUrlTextBox = new System.Windows.Forms.TextBox();
 			this.tfsUrlLabel = new System.Windows.Forms.Label();
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.tabControl1.SuspendLayout();
 			this.bugsTab.SuspendLayout();
 			this.resultsGroupBox.SuspendLayout();
@@ -125,6 +127,7 @@
 			this.resultsListBox.Name = "resultsListBox";
 			this.resultsListBox.Size = new System.Drawing.Size(660, 121);
 			this.resultsListBox.TabIndex = 25;
+			this.resultsListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ResultsListBoxMouseMove);
 			// 
 			// label4
 			// 
@@ -390,6 +393,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ComboBox workersComboBox;
 		private System.Windows.Forms.ListBox resultsListBox;
+		private System.Windows.Forms.ToolTip toolTip1;
 
 	}
 }

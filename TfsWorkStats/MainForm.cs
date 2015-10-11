@@ -21,6 +21,8 @@ namespace TfsWorkStats
 		private Dictionary<int, int> m_wrongAreaBugs;
 		private Dictionary<string, Dictionary<DateTime, Tuple<double, List<int>>>>  m_bugsStats;
 
+		private int m_hoveredIndex;
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -99,6 +101,7 @@ namespace TfsWorkStats
 		{
 			checkWrongAreaButton.Enabled = false;
 			loadBugsDataButton.Enabled = false;
+			resultsGroupBox.Enabled = false;
 			bugsDataPercentLabel.Text = ZeroPercents;
 			bugsDataPercentLabel.Visible = true;
 
@@ -120,6 +123,7 @@ namespace TfsWorkStats
 				{
 					resultsGroupBox.Enabled = true;
 					var users = m_bugsStats.Keys.ToList();
+					users.Sort();
 					workersComboBox.DataSource = users;
 					workersComboBox.SelectedIndex = 0;
 				}));
@@ -135,8 +139,6 @@ namespace TfsWorkStats
 				checkWrongAreaButton.Enabled = true;
 			}));
 		}
-
-		
 
 		private void AreaPathAddButtonClick(object sender, EventArgs e)
 		{
@@ -265,6 +267,33 @@ namespace TfsWorkStats
 					str += (dayWork.Item1/dayWork.Item2.Count).ToString(CultureInfo.InvariantCulture);
 				resultsListBox.Items.Add(str);
 			}
+		}
+
+		private void ResultsListBoxMouseMove(object sender, MouseEventArgs e)
+		{
+			int newHoveredIndex = resultsListBox.IndexFromPoint(e.Location);
+
+			if (m_hoveredIndex == newHoveredIndex)
+				return;
+
+			m_hoveredIndex = newHoveredIndex;
+			if (m_hoveredIndex <= -1)
+			{
+				if (toolTip1.Active)
+					toolTip1.Active = false;
+				return;
+			}
+			string info = resultsListBox.Items[m_hoveredIndex].ToString();
+			string user = workersComboBox.Text;
+			int ind = info.IndexOf(':');
+			var dateStr = info.Substring(0, ind);
+			DateTime date = DateTime.Parse(dateStr);
+			var userWork = m_bugsStats[user];
+			string description = string.Join(",", userWork[date].Item2);
+
+			toolTip1.Active = false;
+			toolTip1.SetToolTip(resultsListBox, description);
+			toolTip1.Active = true;
 		}
 	}
 }
