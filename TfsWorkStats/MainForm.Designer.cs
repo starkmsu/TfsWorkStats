@@ -29,6 +29,8 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.bugsTab = new System.Windows.Forms.TabPage();
 			this.resultsGroupBox = new System.Windows.Forms.GroupBox();
@@ -67,6 +69,9 @@
 			this.tasksDataPercentLabel = new System.Windows.Forms.Label();
 			this.loadTasksDataButton = new System.Windows.Forms.Button();
 			this.label9 = new System.Windows.Forms.Label();
+			this.chartTab = new System.Windows.Forms.TabPage();
+			this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.settingsTab = new System.Windows.Forms.TabPage();
 			this.tfsUrlTextBox = new System.Windows.Forms.TextBox();
 			this.tfsUrlLabel = new System.Windows.Forms.Label();
@@ -76,6 +81,8 @@
 			this.resultsGroupBox.SuspendLayout();
 			this.tasksTab.SuspendLayout();
 			this.taskResultsGroupBox.SuspendLayout();
+			this.chartTab.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
 			this.settingsTab.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -83,6 +90,7 @@
 			// 
 			this.tabControl1.Controls.Add(this.bugsTab);
 			this.tabControl1.Controls.Add(this.tasksTab);
+			this.tabControl1.Controls.Add(this.chartTab);
 			this.tabControl1.Controls.Add(this.settingsTab);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -371,6 +379,7 @@
 			this.taskResultsListBox.Name = "taskResultsListBox";
 			this.taskResultsListBox.Size = new System.Drawing.Size(660, 121);
 			this.taskResultsListBox.TabIndex = 25;
+			this.taskResultsListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TaskResultsListBoxMouseMove);
 			// 
 			// label5
 			// 
@@ -498,6 +507,45 @@
 			this.label9.TabIndex = 32;
 			this.label9.Text = "AreaPath:";
 			// 
+			// chartTab
+			// 
+			this.chartTab.Controls.Add(this.checkedListBox1);
+			this.chartTab.Controls.Add(this.chart1);
+			this.chartTab.Location = new System.Drawing.Point(4, 22);
+			this.chartTab.Name = "chartTab";
+			this.chartTab.Size = new System.Drawing.Size(688, 378);
+			this.chartTab.TabIndex = 3;
+			this.chartTab.Text = "Chart";
+			this.chartTab.UseVisualStyleBackColor = true;
+			// 
+			// checkedListBox1
+			// 
+			this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.checkedListBox1.FormattingEnabled = true;
+			this.checkedListBox1.Location = new System.Drawing.Point(534, 0);
+			this.checkedListBox1.Name = "checkedListBox1";
+			this.checkedListBox1.Size = new System.Drawing.Size(158, 379);
+			this.checkedListBox1.TabIndex = 18;
+			this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.CheckedListBox1SelectedIndexChanged);
+			// 
+			// chart1
+			// 
+			this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			chartArea2.Name = "ChartArea1";
+			this.chart1.ChartAreas.Add(chartArea2);
+			this.chart1.Location = new System.Drawing.Point(0, 0);
+			this.chart1.Name = "chart1";
+			series2.ChartArea = "ChartArea1";
+			series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+			series2.IsVisibleInLegend = false;
+			series2.Name = "Series1";
+			this.chart1.Series.Add(series2);
+			this.chart1.Size = new System.Drawing.Size(528, 378);
+			this.chart1.TabIndex = 17;
+			// 
 			// settingsTab
 			// 
 			this.settingsTab.Controls.Add(this.tfsUrlTextBox);
@@ -545,6 +593,8 @@
 			this.tasksTab.PerformLayout();
 			this.taskResultsGroupBox.ResumeLayout(false);
 			this.taskResultsGroupBox.PerformLayout();
+			this.chartTab.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
 			this.settingsTab.ResumeLayout(false);
 			this.settingsTab.PerformLayout();
 			this.ResumeLayout(false);
@@ -595,6 +645,9 @@
 		private System.Windows.Forms.Label tasksDataPercentLabel;
 		private System.Windows.Forms.Button loadTasksDataButton;
 		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.TabPage chartTab;
+		private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+		private System.Windows.Forms.CheckedListBox checkedListBox1;
 
 	}
 }
