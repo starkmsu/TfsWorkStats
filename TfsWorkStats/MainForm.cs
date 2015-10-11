@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -18,8 +17,10 @@ namespace TfsWorkStats
 		private readonly Config m_config;
 
 		private List<WorkItem> m_bugs;
+		private List<WorkItem> m_tasks;
 		private Dictionary<int, int> m_wrongAreaBugs;
-		private Dictionary<string, Dictionary<DateTime, Tuple<double, List<int>>>>  m_bugsStats;
+		private Dictionary<string, Dictionary<DateTime, Tuple<double, List<int>>>> m_bugsStats;
+		private Dictionary<string, Dictionary<DateTime, Tuple<double, List<int>>>> m_tasksStats;
 
 		private int m_hoveredIndex;
 
@@ -77,11 +78,17 @@ namespace TfsWorkStats
 			{
 				areaPathComboBox.DataSource = m_config.AllAreaPaths;
 				areaPathComboBox.Text = m_config.AllAreaPaths[0];
+				taskAreaPathComboBox.DataSource = m_config.AllAreaPaths;
+				taskAreaPathComboBox.Text = m_config.AllAreaPaths[0];
 			}
 			if (m_config.AreaPaths != null)
 				m_config.AreaPaths.ForEach(a => areaPathListBox.Items.Add(a));
+			if (m_config.TaskAreaPaths != null)
+				m_config.TaskAreaPaths.ForEach(a => taskAreaPathListBox.Items.Add(a));
 			fromDateTimePicker.Value = m_config.From;
 			toDateTimePicker.Value = m_config.To;
+			taskFromDateTimePicker.Value = m_config.From;
+			taskToDateTimePicker.Value = m_config.To;
 			if (areaPathListBox.Items.Count > 0)
 				checkWrongAreaButton.Enabled = true;
 		}
@@ -90,6 +97,7 @@ namespace TfsWorkStats
 		{
 			m_config.TfsUrl = tfsUrlTextBox.Text;
 			m_config.AreaPaths = areaPathListBox.Items.Cast<string>().ToList();
+			m_config.TaskAreaPaths = taskAreaPathListBox.Items.Cast<string>().ToList();
 			m_config.AllAreaPaths = m_config.AllAreaPaths == null
 				? m_config.AreaPaths
 				: m_config.AllAreaPaths.Concat(m_config.AreaPaths).Distinct().ToList();
@@ -118,14 +126,15 @@ namespace TfsWorkStats
 					fromDateTimePicker.Value,
 					toDateTimePicker.Value,
 					x => ProgressReport(x, bugsDataPercentLabel));
-				m_bugsStats = StatsCalculator.ProcessBugs(m_bugs);
+				m_bugsStats = StatsCalculator.ProcessWorkItems(m_bugs);
 				Invoke(new Action(() =>
 				{
 					resultsGroupBox.Enabled = true;
 					var users = m_bugsStats.Keys.ToList();
 					users.Sort();
 					workersComboBox.DataSource = users;
-					workersComboBox.SelectedIndex = 0;
+					if (users.Count > 0)
+						workersComboBox.SelectedIndex = 0;
 				}));
 			}
 			catch (Exception e)
@@ -133,11 +142,11 @@ namespace TfsWorkStats
 				HandleException(e, "Error");
 			}
 			Invoke(new Action(() =>
-			{
-				bugsDataPercentLabel.Visible = false;
-				loadBugsDataButton.Enabled = true;
-				checkWrongAreaButton.Enabled = true;
-			}));
+				{
+					bugsDataPercentLabel.Visible = false;
+					loadBugsDataButton.Enabled = true;
+					checkWrongAreaButton.Enabled = true;
+				}));
 		}
 
 		private void AreaPathAddButtonClick(object sender, EventArgs e)
@@ -204,10 +213,10 @@ namespace TfsWorkStats
 				HandleException(e, "Error");
 			}
 			Invoke(new Action(() =>
-			{
-				checkWrongAreaBugsPercentLabel.Visible = false;
-				checkWrongAreaButton.Enabled = true;
-			}));
+				{
+					checkWrongAreaBugsPercentLabel.Visible = false;
+					checkWrongAreaButton.Enabled = true;
+				}));
 		}
 
 		private void FixWrongAreaBugsButtonClick(object sender, EventArgs e)
@@ -239,10 +248,10 @@ namespace TfsWorkStats
 				HandleException(e, "Error");
 			}
 			Invoke(new Action(() =>
-			{
-				fixPercentLabel.Visible = false;
-				fixWrongAreaBugsButton.Enabled = true;
-			}));
+				{
+					fixPercentLabel.Visible = false;
+					fixWrongAreaBugsButton.Enabled = true;
+				}));
 		}
 
 		private void WorkersComboBoxSelectedIndexChanged(object sender, EventArgs e)
@@ -294,6 +303,100 @@ namespace TfsWorkStats
 			toolTip1.Active = false;
 			toolTip1.SetToolTip(resultsListBox, description);
 			toolTip1.Active = true;
+		}
+
+		private void TaskAreaPathAddButtonClick(object sender, EventArgs e)
+		{
+			string first = taskAreaPathComboBox.Text;
+			List<string> list = m_config.AllAreaPaths;
+			if (!list.Contains(first))
+			{
+				list.Add(first);
+				taskAreaPathComboBox.DataSource = list;
+			}
+			if (taskAreaPathListBox.Items.Contains(first))
+				return;
+			taskAreaPathListBox.Items.Add(first);
+			loadTasksDataButton.Enabled = true;
+		}
+
+		private void TaskAreaPathRemoveButtonClick(object sender, EventArgs e)
+		{
+			taskAreaPathListBox.Items.Remove(taskAreaPathListBox.SelectedItem);
+			taskAreaPathListBox.Enabled = false;
+		}
+
+		private void TaskAreaPathListBoxSelectedValueChanged(object sender, EventArgs e)
+		{
+			if (taskAreaPathListBox.SelectedItem != null
+				&& !taskAreaPathRemoveButton.Enabled)
+				taskAreaPathRemoveButton.Enabled = true;
+		}
+
+		private void LoadTasksDataButtonClick(object sender, EventArgs e)
+		{
+			loadTasksDataButton.Enabled = false;
+			taskResultsGroupBox.Enabled = false;
+			tasksDataPercentLabel.Text = ZeroPercents;
+			tasksDataPercentLabel.Visible = true;
+
+			ThreadPool.QueueUserWorkItem(x => LoadTasksData());
+		}
+
+		private void LoadTasksData()
+		{
+			try
+			{
+				m_tasks = DataLoader.GetTasks(
+					tfsUrlTextBox.Text,
+					taskAreaPathListBox.Items.Cast<string>().ToList(),
+					taskFromDateTimePicker.Value,
+					taskToDateTimePicker.Value,
+					x => ProgressReport(x, tasksDataPercentLabel));
+				m_tasksStats = StatsCalculator.ProcessWorkItems(m_tasks);
+				Invoke(new Action(() =>
+				{
+					taskResultsGroupBox.Enabled = true;
+					var users = m_tasksStats.Keys.ToList();
+					users.Sort();
+					taskWorkersComboBox.DataSource = users;
+					if (users.Count > 0)
+						taskWorkersComboBox.SelectedIndex = 0;
+				}));
+			}
+			catch (Exception e)
+			{
+				HandleException(e, "Error");
+			}
+			Invoke(new Action(() =>
+				{
+					tasksDataPercentLabel.Visible = false;
+					loadTasksDataButton.Enabled = true;
+				}));
+		}
+
+		private void TaskWorkersComboBoxSelectedIndexChanged(object sender, EventArgs e)
+		{
+			string user = taskWorkersComboBox.Text;
+			if (string.IsNullOrEmpty(user))
+				return;
+
+			var userWork = m_tasksStats[user];
+			taskResultsListBox.Items.Clear();
+			foreach (var date in userWork.Keys.OrderBy(i => i))
+			{
+				var dayWork = userWork[date];
+				string str = date.ToString("dd-MM-yyyy") + ": "
+					+ dayWork.Item1 + " hours - resolved "
+					+ dayWork.Item2.Count + ". Ave = ";
+				if (dayWork.Item2.Count == 0)
+					str += @"N\A";
+				else if (dayWork.Item1 / dayWork.Item2.Count - Math.Floor(dayWork.Item1 / dayWork.Item2.Count) > 0)
+					str += (dayWork.Item1 / dayWork.Item2.Count).ToString("N", CultureInfo.InvariantCulture);
+				else
+					str += (dayWork.Item1 / dayWork.Item2.Count).ToString(CultureInfo.InvariantCulture);
+				taskResultsListBox.Items.Add(str);
+			}
 		}
 	}
 }

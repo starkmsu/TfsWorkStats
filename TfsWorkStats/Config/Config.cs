@@ -13,6 +13,8 @@ namespace TfsWorkStats
 
 		public List<string> AllAreaPaths { get; set; }
 
+		public List<string> TaskAreaPaths { get; set; }
+
 		public DateTime From { get; set; }
 
 		public DateTime To { get; set; }
@@ -28,8 +30,9 @@ namespace TfsWorkStats
 			return new Config
 			{
 				TfsUrl = TfsUrl,
-				AreaPaths = AreaPaths,
+				AreaPaths = CopyIfNotNull(AreaPaths),
 				AllAreaPaths = CopyIfNotNull(AllAreaPaths),
+				TaskAreaPaths = CopyIfNotNull(TaskAreaPaths),
 				From = From,
 				To = To,
 			};
@@ -40,8 +43,9 @@ namespace TfsWorkStats
 			if (other == null)
 				return false;
 			return TfsUrl == other.TfsUrl
-				&& AreaPaths == other.AreaPaths
+				&& CollectionsEquals(AreaPaths, other.AreaPaths)
 				&& CollectionsEquals(AllAreaPaths, other.AllAreaPaths)
+				&& CollectionsEquals(TaskAreaPaths, other.TaskAreaPaths)
 				&& From.Date == other.From.Date
 				&& To.Date == other.To.Date;
 		}

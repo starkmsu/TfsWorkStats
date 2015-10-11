@@ -17,42 +17,31 @@ namespace TfsWorkStats
 			DateTime to,
 			Action<int> progressReportHandler)
 		{
-			var strBuilder = new StringBuilder();
-			strBuilder.Append("SELECT * FROM WorkItemLinks");
-			strBuilder.Append(" WHERE Source.[System.WorkItemType] = 'Bug'");
-			strBuilder.Append(" AND (Source.[System.State] = 'Closed' OR Source.[System.State] = 'Resolved')");
-			strBuilder.Append(" AND Source.[Resolved Date] > '" + from.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-			strBuilder.Append("' AND Source.[Resolved Date] < '" + to.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-			strBuilder.Append("' AND (");
-			for (int i = 0; i < areaPaths.Count; i++)
-			{
-				string areaPath = areaPaths[i];
-				if (i > 0)
-					strBuilder.Append(" OR ");
-				strBuilder.Append("Source.[System.AreaPath] UNDER '" + areaPath + "'");
-			}
-			strBuilder.Append(")");
-			strBuilder.Append(" AND Target.[System.WorkItemType] = 'Ship'");
-			foreach (string areaPath in areaPaths)
-			{
-				strBuilder.Append(" AND Target.[System.AreaPath] NOT UNDER '" + areaPath + "'");
-			}
-			strBuilder.Append(" MODE (DoesNotContain)");
+			return GetWorkItems(
+				"Bug",
+				null,
+				tfsUrl,
+				areaPaths,
+				from,
+				to,
+				progressReportHandler);
+		}
 
-			using (var wiqlAccessor = new TfsWiqlAccessor(tfsUrl))
-			{
-				var bugsIds = wiqlAccessor.QueryIdsFromLinks(
-					strBuilder.ToString(),
-					null,
-					null,
-					null);
-				if (bugsIds.Count == 0)
-					return new List<WorkItem>(0);
-				return wiqlAccessor.QueryWorkItemsByIds(
-					bugsIds.Keys,
-					null,
-					progressReportHandler);
-			}
+		internal static List<WorkItem> GetTasks(
+			string tfsUrl,
+			List<string> areaPaths,
+			DateTime from,
+			DateTime to,
+			Action<int> progressReportHandler)
+		{
+			return GetWorkItems(
+				"Task",
+				"Development",
+				tfsUrl,
+				areaPaths,
+				from,
+				to,
+				progressReportHandler);
 		}
 
 		internal static Dictionary<int, int> GetWrongAreaBugs(
@@ -101,6 +90,55 @@ namespace TfsWorkStats
 				}
 
 				return result;
+			}
+		}
+
+		private static List<WorkItem> GetWorkItems(
+			string workItemType,
+			string discipline,
+			string tfsUrl,
+			List<string> areaPaths,
+			DateTime from,
+			DateTime to,
+			Action<int> progressReportHandler)
+		{
+			var strBuilder = new StringBuilder();
+			strBuilder.Append("SELECT * FROM WorkItemLinks");
+			strBuilder.Append(" WHERE Source.[System.WorkItemType] = '" + workItemType + "'");
+			if (!string.IsNullOrEmpty(discipline))
+				strBuilder.Append(" AND Source.[Discipline] = '" + discipline + "'");
+			strBuilder.Append(" AND (Source.[System.State] = 'Closed' OR Source.[System.State] = 'Resolved')");
+			strBuilder.Append(" AND Source.[Resolved Date] > '" + from.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+			strBuilder.Append("' AND Source.[Resolved Date] < '" + to.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+			strBuilder.Append("' AND (");
+			for (int i = 0; i < areaPaths.Count; i++)
+			{
+				string areaPath = areaPaths[i];
+				if (i > 0)
+					strBuilder.Append(" OR ");
+				strBuilder.Append("Source.[System.AreaPath] UNDER '" + areaPath + "'");
+			}
+			strBuilder.Append(")");
+			strBuilder.Append(" AND Target.[System.WorkItemType] = 'Ship'");
+			foreach (string areaPath in areaPaths)
+			{
+				strBuilder.Append(" AND Target.[System.AreaPath] NOT UNDER '" + areaPath + "'");
+			}
+			strBuilder.Append(" MODE (DoesNotContain)");
+
+			using (var wiqlAccessor = new TfsWiqlAccessor(tfsUrl))
+			{
+				var bugsIds = wiqlAccessor.QueryIdsFromLinks(
+					strBuilder.ToString(),
+					null,
+					null,
+					null);
+				if (bugsIds.Count == 0)
+					return new List<WorkItem>(0);
+				return wiqlAccessor.QueryWorkItemsByIds(
+					bugsIds.Keys,
+					null,
+					progressReportHandler);
 			}
 		}
 

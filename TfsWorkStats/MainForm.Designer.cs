@@ -52,6 +52,21 @@
 			this.loadBugsDataButton = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tasksTab = new System.Windows.Forms.TabPage();
+			this.taskResultsGroupBox = new System.Windows.Forms.GroupBox();
+			this.taskResultsListBox = new System.Windows.Forms.ListBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.taskWorkersComboBox = new System.Windows.Forms.ComboBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.taskToDateTimePicker = new System.Windows.Forms.DateTimePicker();
+			this.label7 = new System.Windows.Forms.Label();
+			this.taskFromDateTimePicker = new System.Windows.Forms.DateTimePicker();
+			this.taskAreaPathListBox = new System.Windows.Forms.ListBox();
+			this.taskAreaPathComboBox = new System.Windows.Forms.ComboBox();
+			this.taskAreaPathRemoveButton = new System.Windows.Forms.Button();
+			this.taskAreaPathAddButton = new System.Windows.Forms.Button();
+			this.tasksDataPercentLabel = new System.Windows.Forms.Label();
+			this.loadTasksDataButton = new System.Windows.Forms.Button();
+			this.label9 = new System.Windows.Forms.Label();
 			this.settingsTab = new System.Windows.Forms.TabPage();
 			this.tfsUrlTextBox = new System.Windows.Forms.TextBox();
 			this.tfsUrlLabel = new System.Windows.Forms.Label();
@@ -59,6 +74,8 @@
 			this.tabControl1.SuspendLayout();
 			this.bugsTab.SuspendLayout();
 			this.resultsGroupBox.SuspendLayout();
+			this.tasksTab.SuspendLayout();
+			this.taskResultsGroupBox.SuspendLayout();
 			this.settingsTab.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -308,6 +325,18 @@
 			// 
 			// tasksTab
 			// 
+			this.tasksTab.Controls.Add(this.taskResultsGroupBox);
+			this.tasksTab.Controls.Add(this.label6);
+			this.tasksTab.Controls.Add(this.taskToDateTimePicker);
+			this.tasksTab.Controls.Add(this.label7);
+			this.tasksTab.Controls.Add(this.taskFromDateTimePicker);
+			this.tasksTab.Controls.Add(this.taskAreaPathListBox);
+			this.tasksTab.Controls.Add(this.taskAreaPathComboBox);
+			this.tasksTab.Controls.Add(this.taskAreaPathRemoveButton);
+			this.tasksTab.Controls.Add(this.taskAreaPathAddButton);
+			this.tasksTab.Controls.Add(this.tasksDataPercentLabel);
+			this.tasksTab.Controls.Add(this.loadTasksDataButton);
+			this.tasksTab.Controls.Add(this.label9);
 			this.tasksTab.Location = new System.Drawing.Point(4, 22);
 			this.tasksTab.Name = "tasksTab";
 			this.tasksTab.Padding = new System.Windows.Forms.Padding(3);
@@ -315,6 +344,159 @@
 			this.tasksTab.TabIndex = 1;
 			this.tasksTab.Text = "Tasks";
 			this.tasksTab.UseVisualStyleBackColor = true;
+			// 
+			// taskResultsGroupBox
+			// 
+			this.taskResultsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.taskResultsGroupBox.Controls.Add(this.taskResultsListBox);
+			this.taskResultsGroupBox.Controls.Add(this.label5);
+			this.taskResultsGroupBox.Controls.Add(this.taskWorkersComboBox);
+			this.taskResultsGroupBox.Enabled = false;
+			this.taskResultsGroupBox.Location = new System.Drawing.Point(7, 192);
+			this.taskResultsGroupBox.Name = "taskResultsGroupBox";
+			this.taskResultsGroupBox.Size = new System.Drawing.Size(672, 180);
+			this.taskResultsGroupBox.TabIndex = 43;
+			this.taskResultsGroupBox.TabStop = false;
+			this.taskResultsGroupBox.Text = "Results";
+			// 
+			// taskResultsListBox
+			// 
+			this.taskResultsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.taskResultsListBox.FormattingEnabled = true;
+			this.taskResultsListBox.Location = new System.Drawing.Point(6, 46);
+			this.taskResultsListBox.Name = "taskResultsListBox";
+			this.taskResultsListBox.Size = new System.Drawing.Size(660, 121);
+			this.taskResultsListBox.TabIndex = 25;
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(6, 22);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(45, 13);
+			this.label5.TabIndex = 24;
+			this.label5.Text = "Worker:";
+			// 
+			// taskWorkersComboBox
+			// 
+			this.taskWorkersComboBox.FormattingEnabled = true;
+			this.taskWorkersComboBox.Location = new System.Drawing.Point(53, 19);
+			this.taskWorkersComboBox.Name = "taskWorkersComboBox";
+			this.taskWorkersComboBox.Size = new System.Drawing.Size(216, 21);
+			this.taskWorkersComboBox.TabIndex = 0;
+			this.taskWorkersComboBox.SelectedIndexChanged += new System.EventHandler(this.TaskWorkersComboBoxSelectedIndexChanged);
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(158, 140);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(23, 13);
+			this.label6.TabIndex = 42;
+			this.label6.Text = "To:";
+			// 
+			// taskToDateTimePicker
+			// 
+			this.taskToDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+			this.taskToDateTimePicker.Location = new System.Drawing.Point(187, 137);
+			this.taskToDateTimePicker.Name = "taskToDateTimePicker";
+			this.taskToDateTimePicker.Size = new System.Drawing.Size(91, 20);
+			this.taskToDateTimePicker.TabIndex = 41;
+			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(7, 140);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(33, 13);
+			this.label7.TabIndex = 40;
+			this.label7.Text = "From:";
+			// 
+			// taskFromDateTimePicker
+			// 
+			this.taskFromDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+			this.taskFromDateTimePicker.Location = new System.Drawing.Point(46, 137);
+			this.taskFromDateTimePicker.Name = "taskFromDateTimePicker";
+			this.taskFromDateTimePicker.Size = new System.Drawing.Size(91, 20);
+			this.taskFromDateTimePicker.TabIndex = 39;
+			// 
+			// taskAreaPathListBox
+			// 
+			this.taskAreaPathListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.taskAreaPathListBox.FormattingEnabled = true;
+			this.taskAreaPathListBox.Location = new System.Drawing.Point(7, 36);
+			this.taskAreaPathListBox.Name = "taskAreaPathListBox";
+			this.taskAreaPathListBox.Size = new System.Drawing.Size(672, 95);
+			this.taskAreaPathListBox.TabIndex = 38;
+			this.taskAreaPathListBox.SelectedValueChanged += new System.EventHandler(this.TaskAreaPathListBoxSelectedValueChanged);
+			// 
+			// taskAreaPathComboBox
+			// 
+			this.taskAreaPathComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.taskAreaPathComboBox.FormattingEnabled = true;
+			this.taskAreaPathComboBox.Location = new System.Drawing.Point(67, 9);
+			this.taskAreaPathComboBox.Name = "taskAreaPathComboBox";
+			this.taskAreaPathComboBox.Size = new System.Drawing.Size(468, 21);
+			this.taskAreaPathComboBox.TabIndex = 37;
+			// 
+			// taskAreaPathRemoveButton
+			// 
+			this.taskAreaPathRemoveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.taskAreaPathRemoveButton.Enabled = false;
+			this.taskAreaPathRemoveButton.Location = new System.Drawing.Point(612, 7);
+			this.taskAreaPathRemoveButton.Name = "taskAreaPathRemoveButton";
+			this.taskAreaPathRemoveButton.Size = new System.Drawing.Size(69, 23);
+			this.taskAreaPathRemoveButton.TabIndex = 36;
+			this.taskAreaPathRemoveButton.Text = "Remove";
+			this.taskAreaPathRemoveButton.UseVisualStyleBackColor = true;
+			this.taskAreaPathRemoveButton.Click += new System.EventHandler(this.TaskAreaPathRemoveButtonClick);
+			// 
+			// taskAreaPathAddButton
+			// 
+			this.taskAreaPathAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.taskAreaPathAddButton.Location = new System.Drawing.Point(544, 7);
+			this.taskAreaPathAddButton.Name = "taskAreaPathAddButton";
+			this.taskAreaPathAddButton.Size = new System.Drawing.Size(62, 23);
+			this.taskAreaPathAddButton.TabIndex = 35;
+			this.taskAreaPathAddButton.Text = "Add";
+			this.taskAreaPathAddButton.UseVisualStyleBackColor = true;
+			this.taskAreaPathAddButton.Click += new System.EventHandler(this.TaskAreaPathAddButtonClick);
+			// 
+			// tasksDataPercentLabel
+			// 
+			this.tasksDataPercentLabel.AutoSize = true;
+			this.tasksDataPercentLabel.Location = new System.Drawing.Point(91, 168);
+			this.tasksDataPercentLabel.Name = "tasksDataPercentLabel";
+			this.tasksDataPercentLabel.Size = new System.Drawing.Size(21, 13);
+			this.tasksDataPercentLabel.TabIndex = 34;
+			this.tasksDataPercentLabel.Text = "0%";
+			this.tasksDataPercentLabel.Visible = false;
+			// 
+			// loadTasksDataButton
+			// 
+			this.loadTasksDataButton.Enabled = false;
+			this.loadTasksDataButton.Location = new System.Drawing.Point(10, 163);
+			this.loadTasksDataButton.Name = "loadTasksDataButton";
+			this.loadTasksDataButton.Size = new System.Drawing.Size(75, 23);
+			this.loadTasksDataButton.TabIndex = 33;
+			this.loadTasksDataButton.Text = "Load data";
+			this.loadTasksDataButton.UseVisualStyleBackColor = true;
+			this.loadTasksDataButton.Click += new System.EventHandler(this.LoadTasksDataButtonClick);
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Location = new System.Drawing.Point(7, 12);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(54, 13);
+			this.label9.TabIndex = 32;
+			this.label9.Text = "AreaPath:";
 			// 
 			// settingsTab
 			// 
@@ -359,6 +541,10 @@
 			this.bugsTab.PerformLayout();
 			this.resultsGroupBox.ResumeLayout(false);
 			this.resultsGroupBox.PerformLayout();
+			this.tasksTab.ResumeLayout(false);
+			this.tasksTab.PerformLayout();
+			this.taskResultsGroupBox.ResumeLayout(false);
+			this.taskResultsGroupBox.PerformLayout();
 			this.settingsTab.ResumeLayout(false);
 			this.settingsTab.PerformLayout();
 			this.ResumeLayout(false);
@@ -394,6 +580,21 @@
 		private System.Windows.Forms.ComboBox workersComboBox;
 		private System.Windows.Forms.ListBox resultsListBox;
 		private System.Windows.Forms.ToolTip toolTip1;
+		private System.Windows.Forms.GroupBox taskResultsGroupBox;
+		private System.Windows.Forms.ListBox taskResultsListBox;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.ComboBox taskWorkersComboBox;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.DateTimePicker taskToDateTimePicker;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.DateTimePicker taskFromDateTimePicker;
+		private System.Windows.Forms.ListBox taskAreaPathListBox;
+		private System.Windows.Forms.ComboBox taskAreaPathComboBox;
+		private System.Windows.Forms.Button taskAreaPathRemoveButton;
+		private System.Windows.Forms.Button taskAreaPathAddButton;
+		private System.Windows.Forms.Label tasksDataPercentLabel;
+		private System.Windows.Forms.Button loadTasksDataButton;
+		private System.Windows.Forms.Label label9;
 
 	}
 }
